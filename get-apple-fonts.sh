@@ -11,14 +11,10 @@ wget -O- "https://developer.apple.com/fonts/" | sed -n \
 	-e 's:<:\n<:g' -e 's:.*href="\([^"]*\)dmg".*:\1:' | while read dmg_url; do
 		wget "$dmg_url"
 	done
-for dmg_file in *.dmg; do
-	7z x "$dmg_file"
-done
-for d in *Fonts; do
+find . -maxdepth 1 -name "*.dmg" -exec 7z x {} \;
+find . -maxdepth 1 -type d -name "*Fonts" | while read d; do
 	pushd "$d"
-	for pkg_file in *.pkg; do
-		xar -xvf "$pkg_file"
-	done
+	find . -maxdepth 1 -name "*.pkg" -exec xar -xvf {} \;
 	find . -name "Payload" | while read payload_file; do
 		gunzip < "$payload_file" | cpio -idmv
 	done
