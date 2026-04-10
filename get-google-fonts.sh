@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
 set -eE -o pipefail
 
 DESTDIR="/usr/local/share/fonts/Google"
