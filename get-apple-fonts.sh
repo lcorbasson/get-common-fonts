@@ -2,7 +2,7 @@
 set -eE -o pipefail
 
 DESTDIR="/usr/local/share/fonts/Apple"
-TMPDIR="$(mktemp -d)"
+TMPDIR="$(mktemp --tmpdir -d "$(basename "$0").XXXXXX")"
 
 mkdir -p "$DESTDIR"
 
