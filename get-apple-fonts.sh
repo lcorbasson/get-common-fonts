@@ -26,5 +26,6 @@ for d in *Fonts; do
 done
 popd
 
-find . -iname "*.ttf" -o -iname "*.otf" -exec cp -av {} "$DESTDIR/" \;
+find . -iname "*.ttf" -o -iname "*.otf" -exec mv -v {} "$DESTDIR/" \;
 
+rm -rf "$TMPDIR"
