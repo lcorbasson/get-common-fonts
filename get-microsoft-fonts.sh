@@ -19,13 +19,13 @@ for SRCDIR in "${SRCDIRS[@]}"; do
 		7z x "$iso_dir/$iso_file" -o"$iso_file.dir"
 		pushd "$iso_file.dir"
 		mkdir -p fonts/boot-fonts
-		find . \( -iname "*.tt?" -o -iname "*.otf" \) -exec cp -av {} fonts/boot-fonts/ \;
-		find . -ipath "./sources/install.wim" -o -ipath "./sources/install.esd" | while read install_package; do
-	#		7z e "$install_package" "{,1/}Windows/{Fonts/"*".{ttf,ttc,otf}}" -ofonts/
+		find . \( -iname "*.tt?" -o -iname "*.otf" \) \
+			-exec mv -v {} fonts/boot-fonts/ \;
+		find . \( -ipath "./sources/install.wim" -o -ipath "./sources/install.esd" \) | while read install_package; do
 			7z x "$install_package" -o"install.dir/"
 			find . -ipath "./install.dir/*Windows/Fonts" | while read fonts_dir; do
 				find "$fonts_dir" -type f | while read font; do
-					cp "$font" fonts/ || true
+					mv "$font" fonts/
 				done
 			done
 		done
@@ -34,7 +34,8 @@ for SRCDIR in "${SRCDIRS[@]}"; do
 		rm -rf "$iso_file.dir"
 	done
 done
-find . -maxdepth 1 -name "*.fonts" -exec mv -v {} "$DESTDIR/" {} \;
+find . -maxdepth 1 -name "*.fonts" \
+	-exec mv -v {} "$DESTDIR/" {} \;
 popd
 
 rm -rf "$TMPDIR"
