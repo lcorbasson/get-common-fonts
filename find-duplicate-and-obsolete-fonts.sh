@@ -51,18 +51,3 @@ join -t '	' -v 1 fonts.files.txt fonts.latest.files.txt \
 	> fonts.obsolete.files.txt
 wc -l fonts.obsolete.files.txt
 
-#while IFS=$'\t' read family slant weight width
-#time find . -type f \
-#	| while read fontfile; do
-#	mainfontname="$(otfinfo -p "$fontfile")"
-#	if [ -z "$mainfontname" ]; then
-#		continue
-#	fi
-#	fontversion="$(otfinfo -v "$fontfile")"
-#	fc-scan --format="%{postscriptname}\n" "$fontfile" \
-#		| while read fontname; do
-#		echo "$fontname	$fontversion	$fontfile"
-#	done
-#done 2> fonts.err.txt \
-#	| sort -rV \
-#	| tee fonts.txt
