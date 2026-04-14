@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eE -o pipefail
 
+KEEP_ALL_LATEST_VERSIONS=true
+
 DIRS=("$@")
 [ $# -eq 0 ] && DIRS=('.')
 
@@ -32,7 +34,12 @@ echo "Find the latest version for each variant"
 cut -d'	' -f1-4 < fonts.txt \
 	| pv -l --size "$(wc -l < fonts.txt)" \
 	| uniq | while read variant; do
-	grep -e '^'"$variant" < fonts.txt | tail -1
+	if "$KEEP_ALL_LATEST_VERSIONS"; then
+		variantandversion="$(grep -e '^'"$variant" < fonts.txt | tail -1 | cut -d'	' -f1-5)"
+		grep -e '^'"$variantandversion" < fonts.txt
+	else
+		grep -e '^'"$variant" < fonts.txt | tail -1
+	fi
 done > fonts.latest.txt
 wc -l fonts.latest.txt
 # TODO: check e.g. "Roboto Mono,Roboto Mono Light": alternative names?
