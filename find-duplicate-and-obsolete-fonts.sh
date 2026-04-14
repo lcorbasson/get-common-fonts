@@ -1,12 +1,17 @@
 #!/bin/bash
 set -eE -o pipefail
 
+DIRS=("$@")
+[ $# -eq 0 ] && DIRS=('.')
+
 echo "Get all fonts and their characteristics"
-time find . -type f \
-	| pv -l --size "$(find . -type f | wc -l)" \
-	| while read f; do
-		fc-scan --format "%{family}\t%{slant}\t%{weight}\t%{width}\t%{fontversion}\t%{postscriptname}\t%{file}\n" "$f"
-	done \
+for dir in "${DIRS[@]}"; do
+	time find "$dir" -type f \
+		| pv -l --size "$(find "$dir" -type f | wc -l)" \
+		| while read f; do
+			fc-scan --format "%{family}\t%{slant}\t%{weight}\t%{width}\t%{fontversion}\t%{postscriptname}\t%{file}\n" "$f"
+		done
+done \
 	| sort -V \
 	> fonts.txt
 wc -l fonts.txt
